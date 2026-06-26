@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Table &amp; Tales — Tonight</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:#EDEAE0;font-family:'Inter',system-ui,sans-serif;color:#2E2E2A;display:flex;align-items:stretch;justify-content:center;padding:20px}
+  .board{width:100%;max-width:1120px;background:#F4F1E8;border:2px solid #9DA081;border-radius:24px;padding:26px 32px;display:flex;flex-direction:column}
+  .head{display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid #D7D4C6;padding-bottom:14px;margin-bottom:20px}
+  .head .t{font-family:'Playfair Display',Georgia,serif;font-size:clamp(26px,4vw,42px);font-weight:600;letter-spacing:1px;line-height:1}
+  .head .ev{text-transform:uppercase;letter-spacing:2px;font-size:12px;font-weight:500;color:#7A7B6E}
+  .cols{display:grid;grid-template-columns:1.1fr 1fr 1.1fr;gap:28px;flex:1}
+  .panel{display:flex;flex-direction:column;min-width:0}
+  .ptitle{text-transform:uppercase;letter-spacing:1.7px;font-size:12px;font-weight:500;color:#3A3A34;border-bottom:1px solid #E4E1D5;padding-bottom:8px;margin-bottom:14px}
+  .ev-name{font-family:'Playfair Display',Georgia,serif;font-size:clamp(22px,3vw,32px);font-weight:600;line-height:1.1;margin-bottom:8px}
+  .ev-desc{font-size:14px;color:#6E6F62;line-height:1.5;margin-bottom:12px}
+  .ev-when{display:inline-block;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#5A5B48;border:1px solid #C9C6B6;border-radius:20px;padding:5px 14px}
+  .rate-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;text-align:center}
+  .stars{font-size:clamp(26px,4vw,40px);color:#C9A24B;letter-spacing:4px;line-height:1}
+  .avg{font-family:'Playfair Display',Georgia,serif;font-size:clamp(40px,7vw,64px);font-weight:600;margin:12px 0 2px;font-variant-numeric:tabular-nums}
+  .cnt{font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:#7A7B6E}
+  .st{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #E4E1D5}
+  .st:last-child{border-bottom:none}
+  .dot{width:9px;height:9px;border-radius:50%;flex:none}
+  .dot.on{background:#6B9A3F}.dot.off{background:#C0584A}
+  .st .nm{flex:1;font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .st .rl{font-size:12px;color:#7A7B6E;text-transform:uppercase;letter-spacing:.5px}
+</style>
+</head>
+<body>
+<div class="board">
+  <div class="head"><div class="t">TABLE &amp; TALES</div><div class="ev">Tonight</div></div>
+  <div class="cols">
+    <div class="panel"><div class="ptitle">Event</div><div id="event"></div></div>
+    <div class="panel"><div class="ptitle">Guest Rating</div><div class="rate-wrap" id="rating"></div></div>
+    <div class="panel"><div class="ptitle">On Shift</div><div id="roster"></div></div>
+  </div>
+</div>
+<script>
+const SAMPLE={
+  event:{title:'Live Jazz Night',desc:'An evening of smooth jazz and candlelit dining. Reserve your table for a night to remember.',when:'8 PM – Late'},
+  rating:{avg:'4.8',stars:5,count:'126 reviews'},
+  roster:[{name:'Mas Kabila',role:'Host',on:true},{name:'Vera',role:'Chef',on:true},{name:'Dino',role:'Bar',on:true},{name:'Lia',role:'Server',on:false}]
+};
+function esc(s){return String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+function render(d){
+  const e=d.event||{},r=d.rating||{},ro=d.roster||[];
+  document.getElementById('event').innerHTML='<div class="ev-name">'+esc(e.title)+'</div><div class="ev-desc">'+esc(e.desc)+'</div>'+(e.when?'<span class="ev-when">'+esc(e.when)+'</span>':'');
+  const sc=Math.max(0,Math.min(5,parseInt(r.stars||0,10)));
+  document.getElementById('rating').innerHTML='<div class="stars">'+('★'.repeat(sc)+'☆'.repeat(5-sc))+'</div><div class="avg">'+esc(r.avg)+'</div><div class="cnt">'+esc(r.count)+'</div>';
+  document.getElementById('roster').innerHTML=ro.map(s=>'<div class="st"><span class="dot '+(s.on?'on':'off')+'"></span><span class="nm">'+esc(s.name)+'</span><span class="rl">'+esc(s.role)+'</span></div>').join('');
+}
+function fromUrl(){try{const m=location.search.match(/[?&]d=([^&]+)/);if(m){render(JSON.parse(atob(decodeURIComponent(m[1]))));return true;}}catch(e){}return false;}
+if(!fromUrl()) render(SAMPLE);
+</script>
+</body>
+</html>
