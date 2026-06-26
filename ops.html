@@ -9,48 +9,44 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  html,body{height:100%}
-  body{background:radial-gradient(120% 120% at 50% 0%,#26261f 0%,#15140f 70%);font-family:'Inter',system-ui,sans-serif;color:#2E2E2A;display:flex;align-items:center;justify-content:center;padding:26px}
-  /* 3D beveled outer frame (floating) */
-  .frame{width:100%;max-width:1140px;background:linear-gradient(150deg,#a6a888 0%,#8d8f72 38%,#6f7159 100%);border-radius:30px;padding:17px;
-    box-shadow:0 36px 70px rgba(0,0,0,.55), 0 8px 18px rgba(0,0,0,.4), inset 0 2px 3px rgba(255,255,255,.45), inset 0 -4px 8px rgba(0,0,0,.4)}
-  /* recessed cream display */
-  .display{background:linear-gradient(160deg,#F7F4EC 0%,#E8E4D6 100%);border-radius:17px;padding:30px 34px;display:flex;flex-direction:column;
-    box-shadow:inset 0 3px 12px rgba(60,55,40,.22), inset 0 -1px 0 rgba(255,255,255,.6)}
-  .head{display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid #DAD6C8;padding-bottom:15px;margin-bottom:22px}
-  .head .t{font-family:'Playfair Display',Georgia,serif;font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:1px;line-height:1;color:#33332C;
-    text-shadow:0 1px 0 rgba(255,255,255,.8), 0 3px 6px rgba(0,0,0,.14)}
-  .head .ev{text-transform:uppercase;letter-spacing:2.5px;font-size:12px;font-weight:600;color:#84856F}
-  .cols{display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:22px;flex:1}
-  /* raised panel cards */
-  .card{background:linear-gradient(158deg,#FCFAF3 0%,#EFEBDF 100%);border-radius:15px;padding:18px 20px;display:flex;flex-direction:column;min-width:0;
-    box-shadow:0 10px 20px rgba(70,62,42,.18), 0 2px 4px rgba(70,62,42,.20), inset 0 1px 0 rgba(255,255,255,.85), inset 0 0 0 1px rgba(255,255,255,.25)}
-  .ptitle{display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:1.7px;font-size:12px;font-weight:600;color:#5A5B48;border-bottom:1px solid #E4E1D5;padding-bottom:9px;margin-bottom:12px;text-shadow:0 1px 0 rgba(255,255,255,.7)}
-  .ptitle svg{width:15px;height:15px;stroke:#5A5B48;fill:none;stroke-width:1.7;flex:none}
-  .row{display:flex;align-items:baseline;font-size:clamp(12px,1.5vw,15px);padding:7px 0}
-  .row .id{width:30px;font-weight:600;flex:none;color:#33332C}
-  .row .pax{flex:1;color:#6E6F62;padding-right:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .row .tm{color:#A89C84;font-variant-numeric:tabular-nums;font-size:10px;text-transform:uppercase;letter-spacing:.5px;flex:none}
-  .m{display:flex;align-items:baseline;justify-content:space-between;padding:12px 0;border-bottom:1px solid #E7E3D6}
+  html,body{height:100%;width:100%}
+  /* body IS the sage bezel — fills the whole surface, no dark margins */
+  body{background:linear-gradient(150deg,#a6a888 0%,#8d8f72 42%,#6f7159 100%);font-family:'Inter',system-ui,sans-serif;color:#2E2E2A;padding:1.6vw}
+  /* recessed cream display fills inside the bezel */
+  .display{height:100%;width:100%;background:linear-gradient(160deg,#F7F4EC 0%,#E8E4D6 100%);border-radius:1.4vw;padding:2vw 2.4vw;display:flex;flex-direction:column;
+    box-shadow:inset 0 0.3vw 1vw rgba(60,55,40,.22), inset 0 -1px 0 rgba(255,255,255,.6)}
+  .head{display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid #DAD6C8;padding-bottom:1.1vw;margin-bottom:1.6vw;flex:none}
+  .head .t{font-family:'Playfair Display',Georgia,serif;font-size:3.4vw;font-weight:700;letter-spacing:.5px;line-height:1;color:#33332C;text-shadow:0 1px 0 rgba(255,255,255,.8),0 3px 6px rgba(0,0,0,.14)}
+  .head .ev{text-transform:uppercase;letter-spacing:.25vw;font-size:1.15vw;font-weight:600;color:#84856F}
+  .cols{flex:1;display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:1.6vw;min-height:0}
+  .card{background:linear-gradient(158deg,#FCFAF3 0%,#EFEBDF 100%);border-radius:1.1vw;padding:1.5vw 1.6vw;display:flex;flex-direction:column;min-width:0;overflow:hidden;
+    box-shadow:0 0.8vw 1.6vw rgba(70,62,42,.18), 0 2px 4px rgba(70,62,42,.18), inset 0 1px 0 rgba(255,255,255,.85)}
+  .ptitle{display:flex;align-items:center;gap:.6vw;text-transform:uppercase;letter-spacing:.14vw;font-size:1.15vw;font-weight:600;color:#5A5B48;border-bottom:1px solid #E4E1D5;padding-bottom:.7vw;margin-bottom:1vw;flex:none;text-shadow:0 1px 0 rgba(255,255,255,.7)}
+  .ptitle svg{width:1.3vw;height:1.3vw;stroke:#5A5B48;fill:none;stroke-width:1.7;flex:none}
+  .row{display:flex;align-items:baseline;font-size:1.35vw;padding:.6vw 0}
+  .row .id{width:2.6vw;font-weight:600;flex:none;color:#33332C}
+  .row .pax{flex:1;color:#6E6F62;padding-right:.5vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .row .tm{color:#A89C84;font-variant-numeric:tabular-nums;font-size:.9vw;text-transform:uppercase;letter-spacing:.5px;flex:none}
+  .m{display:flex;align-items:baseline;justify-content:space-between;padding:1.1vw 0;border-bottom:1px solid #E7E3D6}
   .m:last-child{border-bottom:none}
-  .m .lab{font-size:clamp(12px,1.5vw,15px);color:#4A4A42}
-  .m .val{font-family:'Playfair Display',Georgia,serif;font-size:clamp(26px,3.4vw,38px);font-weight:700;font-variant-numeric:tabular-nums;color:#2E2E28;text-shadow:0 1px 0 rgba(255,255,255,.8),0 2px 5px rgba(0,0,0,.12)}
-  .g{margin:13px 0}
-  .g .gl{display:flex;justify-content:space-between;font-size:12px;color:#4A4A42;margin-bottom:6px}
+  .m .lab{font-size:1.35vw;color:#4A4A42}
+  .m .val{font-family:'Playfair Display',Georgia,serif;font-size:3vw;font-weight:700;font-variant-numeric:tabular-nums;color:#2E2E28;text-shadow:0 1px 0 rgba(255,255,255,.8),0 2px 5px rgba(0,0,0,.12)}
+  .g{margin:1.2vw 0}
+  .g .gl{display:flex;justify-content:space-between;font-size:1.1vw;color:#4A4A42;margin-bottom:.5vw}
   .g .gl b{font-weight:600;color:#33332C}
-  .bar{height:9px;background:#E2DECF;border-radius:6px;overflow:hidden;box-shadow:inset 0 2px 4px rgba(60,55,40,.32)}
-  .bar i{display:block;height:100%;background:linear-gradient(180deg,#b3b596 0%,#8c8e70 100%);border-radius:6px;box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+  .bar{height:.8vw;background:#E2DECF;border-radius:.5vw;overflow:hidden;box-shadow:inset 0 2px 4px rgba(60,55,40,.32)}
+  .bar i{display:block;height:100%;background:linear-gradient(180deg,#b3b596 0%,#8c8e70 100%);border-radius:.5vw}
 </style>
 </head>
 <body>
-<div class="frame"><div class="display">
+<div class="display">
   <div class="head"><div class="t">OPERATIONS</div><div class="ev" id="ev">Open Shift</div></div>
   <div class="cols">
     <div class="card"><div class="ptitle"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Active Orders</div><div id="orders"></div></div>
     <div class="card"><div class="ptitle">Shift Score</div><div id="score"></div></div>
     <div class="card"><div class="ptitle">Shift Goals</div><div id="goals"></div></div>
   </div>
-</div></div>
+</div>
 <script>
 const SAMPLE={orders:{sections:[{rows:[{id:'#1',pax:'The Velvet Table - pasta cream',time:'WAITING'},{id:'#2',pax:'The Hearth Table - wine red',time:'WAITING'},{id:'#3',pax:'The Garden Table - salad caesar',time:'WAITING'}]}]},score:{event:'Open Shift',metrics:[{label:'Shift Score',value:'0'},{label:'Staff served',value:'0'},{label:'Loyalty guests',value:'0'}]}};
 function esc(s){return String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
