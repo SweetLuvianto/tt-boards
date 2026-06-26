@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Table &amp; Tales — Event Campaign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:#EDEAE0;font-family:'Inter',system-ui,sans-serif;color:#2E2E2A;display:flex;align-items:center;justify-content:center;padding:24px}
+  .board{width:100%;max-width:600px;background:#F4F1E8;border:2px solid #9DA081;border-radius:26px;padding:44px 48px}
+  .kicker{text-transform:uppercase;letter-spacing:2.4px;font-size:12px;font-weight:500;color:#7A7B6E;margin-bottom:14px}
+  .title{font-family:'Playfair Display',Georgia,serif;font-size:clamp(32px,5.6vw,50px);font-weight:600;line-height:1.05;color:#2E2E2A;margin-bottom:6px}
+  .dates{font-size:14px;color:#7A7B6E;margin-bottom:26px}
+  .li{display:flex;align-items:baseline;gap:12px;padding:11px 0;border-bottom:1px solid #E4E1D5;font-size:clamp(14px,2.3vw,18px);color:#3A3A34}
+  .li:last-child{border-bottom:none}
+  .li .d{width:7px;height:7px;border-radius:50%;background:#9DA081;flex:none;transform:translateY(-2px)}
+</style>
+</head>
+<body>
+<div class="board"><div class="kicker" id="kicker">Now Running</div><div class="title" id="title">Event Campaign</div><div class="dates" id="dates"></div><div id="lines"></div></div>
+<script>
+const SAMPLE={kicker:"Now Running",title:"Wine & Dine Night",dates:"Tonight · 7:00 – 11:00 PM",lines:[
+ "Double loyalty points on every order",
+ "Featured dish: Cream Pasta",
+ "Sommelier pairing at the bar",
+ "Best-dressed table wins dessert"
+]};
+function esc(s){return String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+function render(d){
+ document.getElementById('kicker').textContent=d.kicker||"Now Running";
+ document.getElementById('title').textContent=d.title||"Event Campaign";
+ document.getElementById('dates').textContent=d.dates||"";
+ document.getElementById('lines').innerHTML=(d.lines||[]).map(l=>'<div class="li"><span class="d"></span><span>'+esc(l)+'</span></div>').join('');
+}
+async function load(){
+ try{const r=await fetch('/api/state?board=event-campaign',{cache:'no-store'});if(r.ok){const d=await r.json();if(d&&(d.lines||d.title)){render(d);return;}}}catch(e){}
+ render(SAMPLE);
+}
+load();setInterval(load,5000);
+</script>
+</body>
+</html>

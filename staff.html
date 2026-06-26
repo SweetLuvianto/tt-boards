@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Table &amp; Tales — Staff Roster</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:#EDEAE0;font-family:'Inter',system-ui,sans-serif;color:#2E2E2A;display:flex;align-items:center;justify-content:center;padding:24px}
+  .board{width:100%;max-width:680px;background:#F4F1E8;border:2px solid #9DA081;border-radius:26px;padding:40px 46px}
+  .title{font-family:'Playfair Display',Georgia,serif;font-size:clamp(34px,6vw,54px);font-weight:600;letter-spacing:1.5px;line-height:1;margin-bottom:26px}
+  table{width:100%;border-collapse:collapse}
+  thead th{text-align:left;text-transform:uppercase;letter-spacing:1.4px;font-size:12px;font-weight:500;color:#6A6B60;padding:0 0 12px;border-bottom:1px solid #D7D4C6}
+  thead th:last-child{text-align:right}
+  tbody td{padding:14px 0;font-size:clamp(13px,2.1vw,17px);color:#3A3A34;border-bottom:1px solid #E4E1D5}
+  tbody td.name{font-weight:500}
+  tbody td.st{text-align:right;white-space:nowrap}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;vertical-align:middle}
+  .in .dot{background:#6B9A3F}
+  .out .dot{background:#C0584A}
+  .in{color:#4F7A2E}.out{color:#A8463A}
+</style>
+</head>
+<body>
+<div class="board"><div class="title" id="title">STAFF ROSTER</div>
+<table><thead><tr id="head"></tr></thead><tbody id="rows"></tbody></table></div>
+<script>
+const SAMPLE={title:"STAFF ROSTER",columns:["Staff","Role","Shift","Status"],rows:[
+ {staff:"Emma W.",role:"Manager",shift:"9:00 - 5:00",status:"IN"},
+ {staff:"Liam P.",role:"Chef",shift:"9:00 - 5:00",status:"IN"},
+ {staff:"Olivia R.",role:"Server",shift:"10:00 - 6:00",status:"IN"},
+ {staff:"Noah T.",role:"Barista",shift:"10:00 - 6:00",status:"OUT"},
+ {staff:"Ava K.",role:"Host",shift:"11:00 - 7:00",status:"IN"},
+ {staff:"Ethan M.",role:"Server",shift:"11:00 - 7:00",status:"IN"}
+]};
+function esc(s){return String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+function render(d){
+ document.getElementById('title').textContent=d.title||"STAFF ROSTER";
+ const cols=d.columns||["Staff","Role","Shift","Status"];
+ document.getElementById('head').innerHTML=cols.map(c=>'<th>'+esc(c)+'</th>').join('');
+ document.getElementById('rows').innerHTML=(d.rows||[]).map(r=>{
+  const isIn=String(r.status).toUpperCase()==='IN';
+  return '<tr><td class="name">'+esc(r.staff)+'</td><td>'+esc(r.role)+'</td><td>'+esc(r.shift)+'</td>'+
+   '<td class="st '+(isIn?'in':'out')+'"><span class="dot"></span>'+esc(String(r.status).toUpperCase())+'</td></tr>';
+ }).join('');
+}
+async function load(){
+ try{const r=await fetch('/api/state?board=staff',{cache:'no-store'});if(r.ok){const d=await r.json();if(d&&d.rows){render(d);return;}}}catch(e){}
+ render(SAMPLE);
+}
+load();setInterval(load,5000);
+</script>
+</body>
+</html>

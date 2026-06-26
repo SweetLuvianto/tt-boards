@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Table &amp; Tales — Guest Reviews</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:#EDEAE0;font-family:'Inter',system-ui,sans-serif;color:#2E2E2A;display:flex;align-items:center;justify-content:center;padding:24px}
+  .board{width:100%;max-width:600px;background:#F4F1E8;border:2px solid #9DA081;border-radius:26px;padding:42px 46px}
+  .title{font-family:'Playfair Display',Georgia,serif;font-size:clamp(32px,5.6vw,52px);font-weight:600;letter-spacing:1px;line-height:1}
+  .avg{display:flex;align-items:baseline;gap:14px;margin:16px 0 26px}
+  .avg .num{font-family:'Playfair Display',Georgia,serif;font-size:clamp(40px,7vw,64px);font-weight:600;color:#2E2E2A}
+  .stars{font-size:20px;color:#C9A24B;letter-spacing:2px}
+  .avg .cnt{font-size:13px;color:#7A7B6E}
+  .rv{padding:14px 0;border-bottom:1px solid #E4E1D5}.rv:last-child{border-bottom:none}
+  .rv .top{display:flex;align-items:baseline;justify-content:space-between}
+  .rv .nm{font-weight:500;font-size:clamp(14px,2.2vw,17px);color:#3A3A34}
+  .rv .st{font-size:13px;color:#C9A24B;letter-spacing:1px}
+  .rv .tx{font-size:clamp(13px,2vw,15px);color:#6A6B60;margin-top:4px;font-style:italic}
+</style>
+</head>
+<body>
+<div class="board"><div class="title" id="title">GUEST REVIEWS</div>
+<div class="avg"><span class="num" id="num">4.8</span><div><div class="stars" id="stars"></div><div class="cnt" id="cnt"></div></div></div>
+<div id="reviews"></div></div>
+<script>
+const SAMPLE={title:"GUEST REVIEWS",average:4.8,count:128,reviews:[
+ {name:"Maya R.",stars:5,text:"Best pasta in the sim, truly."},
+ {name:"Jonas K.",stars:5,text:"Warm service, lovely ambience."},
+ {name:"Priya S.",stars:4,text:"Quick seating, great wine list."},
+ {name:"Leo M.",stars:5,text:"Will be back next shift."}
+]};
+function esc(s){return String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+function stars(n){n=Math.round(n||0);return '★'.repeat(Math.max(0,Math.min(5,n)))+'☆'.repeat(Math.max(0,5-n))}
+function render(d){
+ document.getElementById('title').textContent=d.title||"GUEST REVIEWS";
+ document.getElementById('num').textContent=(d.average!=null?d.average:'—');
+ document.getElementById('stars').textContent=stars(d.average);
+ document.getElementById('cnt').textContent=(d.count!=null?d.count+' reviews':'');
+ document.getElementById('reviews').innerHTML=(d.reviews||[]).map(r=>'<div class="rv"><div class="top"><span class="nm">'+esc(r.name)+'</span><span class="st">'+stars(r.stars)+'</span></div><div class="tx">'+esc(r.text)+'</div></div>').join('');
+}
+async function load(){
+ try{const r=await fetch('/api/state?board=rating',{cache:'no-store'});if(r.ok){const d=await r.json();if(d&&(d.reviews||d.average!=null)){render(d);return;}}}catch(e){}
+ render(SAMPLE);
+}
+load();setInterval(load,5000);
+</script>
+</body>
+</html>

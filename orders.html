@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Table &amp; Tales — Orders</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:#EDEAE0;font-family:'Inter',system-ui,sans-serif;color:#2E2E2A;display:flex;align-items:center;justify-content:center;padding:24px}
+  .board{width:100%;max-width:560px;background:#F4F1E8;border:2px solid #9DA081;border-radius:26px;padding:40px 46px}
+  .title{font-family:'Playfair Display',Georgia,serif;font-size:clamp(40px,7vw,62px);font-weight:600;letter-spacing:2px;line-height:1;margin-bottom:6px}
+  .sec{display:flex;align-items:center;gap:9px;border-bottom:1px solid #D7D4C6;padding-bottom:8px;margin:26px 0 12px}
+  .sec svg{width:16px;height:16px;stroke:#5A5B48;fill:none;stroke-width:1.6}
+  .sec span{text-transform:uppercase;letter-spacing:1.8px;font-size:13px;font-weight:500;color:#3A3A34}
+  .row{display:flex;align-items:baseline;font-size:clamp(14px,2.4vw,18px);padding:7px 0}
+  .row .id{width:78px;font-weight:500}
+  .row .pax{flex:1;color:#7A7B6E}
+  .row .tm{color:#7A7B6E;font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+<div class="board" id="board"></div>
+<script>
+const SAMPLE={title:"ORDERS",sections:[
+ {label:"Dine-in",icon:"lock",rows:[{id:"#102",pax:"2 PAX",time:"10:15 AM"},{id:"#103",pax:"4 PAX",time:"10:20 AM"},{id:"#104",pax:"6 PAX",time:"10:25 AM"}]},
+ {label:"Takeaway",icon:"bag",rows:[{id:"#201",pax:"",time:"10:30 AM"},{id:"#202",pax:"",time:"10:35 AM"}]},
+ {label:"Delivery",icon:"truck",rows:[{id:"#301",pax:"",time:"10:40 AM"},{id:"#302",pax:"",time:"10:45 AM"}]}
+]};
+const ICONS={
+ lock:'<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>',
+ bag:'<svg viewBox="0 0 24 24"><path d="M6 7h12l1 13H5z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>',
+ truck:'<svg viewBox="0 0 24 24"><path d="M3 6h11v9H3z"/><path d="M14 9h4l3 3v3h-7z"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg>'
+};
+function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+function render(d){
+ let h='<div class="title">'+esc(d.title||"ORDERS")+'</div>';
+ for(const s of (d.sections||[])){
+  h+='<div class="sec">'+(ICONS[s.icon]||'')+'<span>'+esc(s.label)+'</span></div>';
+  for(const r of (s.rows||[])) h+='<div class="row"><span class="id">'+esc(r.id)+'</span><span class="pax">'+esc(r.pax||'')+'</span><span class="tm">'+esc(r.time||'')+'</span></div>';
+ }
+ document.getElementById('board').innerHTML=h;
+}
+function fromUrl(){
+ try{const m=location.search.match(/[?&]d=([^&]+)/);if(m){const d=JSON.parse(atob(decodeURIComponent(m[1])));if(d){render(d);return true;}}}catch(e){}
+ return false;
+}
+async function load(){
+ try{const r=await fetch('/api/state?board=orders',{cache:'no-store'});if(r.ok){const d=await r.json();if(d&&d.sections){render(d);return;}}}catch(e){}
+ render(SAMPLE);
+}
+// Live data baked into the media URL (?d=base64 JSON) by the bridge — no cloud store, no polling.
+if(!fromUrl()){ load(); setInterval(load,8000); }
+</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Table &amp; Tales — Shift Goals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:#EDEAE0;font-family:'Inter',system-ui,sans-serif;color:#2E2E2A;display:flex;align-items:center;justify-content:center;padding:24px}
+  .board{width:100%;max-width:600px;background:#F4F1E8;border:2px solid #9DA081;border-radius:26px;padding:42px 46px}
+  .title{font-family:'Playfair Display',Georgia,serif;font-size:clamp(34px,6vw,54px);font-weight:600;letter-spacing:1.5px;line-height:1;margin-bottom:28px}
+  .g{padding:16px 0;border-bottom:1px solid #E4E1D5}.g:last-child{border-bottom:none}
+  .gt{display:flex;align-items:baseline;justify-content:space-between;gap:14px}
+  .gt .lab{font-size:clamp(14px,2.3vw,18px);color:#3A3A34}
+  .gt .lab .ck{color:#6B9A3F;margin-right:8px}
+  .gt .frac{font-size:13px;color:#7A7B6E;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .bar{height:6px;background:#E2DFD2;border-radius:4px;margin-top:10px;overflow:hidden}
+  .bar > i{display:block;height:100%;background:#9DA081;border-radius:4px}
+  .done .lab{color:#5A5B48}.done .bar > i{background:#6B9A3F}
+</style>
+</head>
+<body>
+<div class="board"><div class="title" id="title">SHIFT GOALS</div><div id="goals"></div></div>
+<script>
+const SAMPLE={title:"SHIFT GOALS",goals:[
+ {text:"Serve 20 guests",done:18,total:20},
+ {text:"5-star ratings",done:6,total:8},
+ {text:"Clear all tables",done:5,total:6},
+ {text:"Loyalty sign-ups",done:3,total:5},
+ {text:"Zero walk-outs",done:1,total:1}
+]};
+function esc(s){return String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+function render(d){
+ document.getElementById('title').textContent=d.title||"SHIFT GOALS";
+ document.getElementById('goals').innerHTML=(d.goals||[]).map(g=>{
+  const pct=g.total?Math.round(100*g.done/g.total):0; const done=g.total&&g.done>=g.total;
+  return '<div class="g'+(done?' done':'')+'"><div class="gt"><span class="lab">'+(done?'<span class="ck">&#10003;</span>':'')+esc(g.text)+'</span><span class="frac">'+esc(g.done)+' / '+esc(g.total)+'</span></div><div class="bar"><i style="width:'+pct+'%"></i></div></div>';
+ }).join('');
+}
+async function load(){
+ try{const r=await fetch('/api/state?board=shift-goals',{cache:'no-store'});if(r.ok){const d=await r.json();if(d&&d.goals){render(d);return;}}}catch(e){}
+ render(SAMPLE);
+}
+load();setInterval(load,5000);
+</script>
+</body>
+</html>

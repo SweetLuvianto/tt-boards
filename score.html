@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Table &amp; Tales — Score</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:#EDEAE0;font-family:'Inter',system-ui,sans-serif;color:#2E2E2A;display:flex;align-items:center;justify-content:center;padding:24px}
+  .board{width:100%;max-width:620px;background:#F4F1E8;border:2px solid #9DA081;border-radius:26px;padding:42px 48px}
+  .title{font-family:'Playfair Display',Georgia,serif;font-size:clamp(36px,6vw,56px);font-weight:600;letter-spacing:1.5px;line-height:1}
+  .event{text-transform:uppercase;letter-spacing:2px;font-size:13px;font-weight:500;color:#7A7B6E;margin:10px 0 30px}
+  .m{display:flex;align-items:baseline;justify-content:space-between;padding:18px 0;border-bottom:1px solid #E4E1D5}
+  .m:last-child{border-bottom:none}
+  .m .lab{font-size:clamp(14px,2.3vw,18px);color:#4A4A42}
+  .m .val{font-family:'Playfair Display',Georgia,serif;font-size:clamp(30px,5vw,46px);font-weight:600;color:#2E2E2A;font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+<div class="board"><div class="title" id="title">SCORE</div><div class="event" id="event">Open Shift</div><div id="metrics"></div></div>
+<script>
+const SAMPLE={title:"SCORE",event:"Open Shift",metrics:[
+ {label:"Shift Score",value:"0"},{label:"Staff Served",value:"0"},{label:"Loyalty Guests",value:"0"},{label:"Avg Rating",value:"—"}
+]};
+function esc(s){return String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+function render(d){
+ document.getElementById('title').textContent=d.title||"SCORE";
+ document.getElementById('event').textContent=d.event||"";
+ document.getElementById('metrics').innerHTML=(d.metrics||[]).map(m=>'<div class="m"><span class="lab">'+esc(m.label)+'</span><span class="val">'+esc(m.value)+'</span></div>').join('');
+}
+function fromUrl(){
+ try{const m=location.search.match(/[?&]d=([^&]+)/);if(m){const d=JSON.parse(atob(decodeURIComponent(m[1])));if(d){render(d);return true;}}}catch(e){}
+ return false;
+}
+async function load(){
+ try{const r=await fetch('/api/state?board=score',{cache:'no-store'});if(r.ok){const d=await r.json();if(d&&d.metrics){render(d);return;}}}catch(e){}
+ render(SAMPLE);
+}
+// Live data is baked into the media URL (?d=base64 JSON) by the bridge — no cloud store, no polling.
+// The bridge only changes the URL when the data changes, which reloads this page with fresh data.
+if(!fromUrl()){ load(); setInterval(load,8000); }
+</script>
+</body>
+</html>
